@@ -24,3 +24,6 @@ go run .
 - Tratamento de erros (error handling)
 - Concorrência (goroutines, channels, sync)
 ---
+
+## Guia de estudos
+- Veja o plano completo em [`GUIA-DE-ESTUDOS-GO.md`](./GUIA-DE-ESTUDOS-GO.md).
