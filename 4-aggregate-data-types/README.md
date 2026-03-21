@@ -1,57 +1,40 @@
 # Tipos Agregados
 
-## Objetivo
-Revisar os principais tipos agregados de Go e como eles se comportam em cópia/compartilhamento.
+## Objetivo da etapa
+Esta etapa aprofunda os principais tipos agregados de Go e mostra como eles se comportam em cenários de cópia, compartilhamento e modelagem de dados.
 
-## Arrays
-```go
-arr := [3]int{1, 2, 3}
-arr2 := arr            // arrays são copiados por valor
-arr[0] = 99
-fmt.Println(arr)       // [99 2 3]
-fmt.Println(arr2)      // [1 2 3]
-```
+## O que você vai aprender
+- a diferença entre arrays e slices;
+- como maps funcionam e quais cuidados exigem;
+- como structs ajudam a modelar domínio de forma simples;
+- como esses tipos se combinam em aplicações reais;
+- como identificar quando há cópia de valor e quando há compartilhamento de dados internos.
 
-## Slices
-```go
-s := []string{"foo", "bar", "baz"}
-s2 := s                // slices compartilham o mesmo array base
-s[0] = "qux"
-fmt.Println(s, s2)     // [qux bar baz] [qux bar baz]
-```
-Para copiar slices, use `slices.Clone` (Go 1.20+).
+## Estrutura da pasta
+- `aggregate-data-types.go` — imprime exemplos de arrays, slices, maps e structs.
 
-## Maps
-```go
-m := map[string]int{"foo": 1, "bar": 2}
-m2 := m                 // maps compartilham a mesma estrutura interna
-m["bar"] = 99
-delete(m, "foo")
-fmt.Println(m, m2)      // map[bar:99] map[bar:99]
-
-v, ok := m["foo"]       // 0, false
-fmt.Println(v, ok)
-```
-- Maps não são ordenados e não são comparáveis.
-
-## Structs
-```go
-type person struct {
-	name string
-	id   int
-}
-
-p1 := person{name: "Arthur", id: 42}
-p2 := p1               // structs são copiados por valor
-p2.name = "Tricia"
-fmt.Println(p1, p2)
-```
-- Structs são tipos de valor, não de referência.
-
-## Exemplo no código
-O arquivo `aggregate-data-types.go` imprime exemplos de arrays, slices, maps e structs.
+## Como estudar esta etapa
+1. Leia cada bloco separadamente: arrays, slices, maps e structs.
+2. Rode o programa observando quais tipos são copiados e quais compartilham dados internamente.
+3. Tente explicar por que a saída muda em cada caso.
+4. Relacione esses comportamentos com futuras estruturas de domínio, coleções e APIs.
 
 ## Como executar
 ```bash
 go run .
 ```
+
+## O que observar ao rodar
+- arrays são copiados por valor;
+- slices compartilham o mesmo array base, salvo cópia explícita;
+- maps compartilham a mesma estrutura interna e não são ordenados;
+- structs são tipos de valor e ajudam a organizar dados relacionados.
+
+## Exercícios sugeridos
+- criar um exemplo adicional mostrando como `append` pode alterar ou não o backing array de um slice;
+- modelar uma lista de produtos usando `[]struct` e um índice usando `map[string]int`;
+- implementar funções simples de busca, filtro ou agregação sobre slices;
+- combinar arrays, slices, maps e structs em um mini exemplo de catálogo ou agenda.
+
+## Próximo passo
+Depois desta etapa, o caminho natural é avançar para tópicos como interfaces, tratamento de erros, testes e composição de tipos.
