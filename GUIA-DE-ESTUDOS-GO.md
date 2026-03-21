@@ -102,8 +102,18 @@ Construa um **gerenciador de tarefas em linha de comando**.
 - datas;
 - exportação CSV.
 
-#### Critério de conclusão
-Você consegue rodar a CLI, persistir dados sem bugs básicos e manter o projeto organizado sem framework.
+#### Critérios de aceite
+- os comandos principais (`add`, `list`, `done`, `remove`) funcionam sem quebrar o fluxo da aplicação;
+- os dados persistidos em JSON sobrevivem a reinicializações da CLI;
+- mensagens de erro orientam o usuário quando argumentos inválidos são enviados;
+- a estrutura do projeto separa parsing de comando, regra de negócio e persistência de forma simples;
+- existe ao menos um pequeno conjunto de testes para as regras de manipulação de tarefas.
+
+#### Sugestões de desenvolvimento
+- comece com uma versão em um único arquivo para validar o fluxo completo;
+- depois extraia pacotes como `task`, `storage` e `cmd` apenas quando a duplicação aparecer;
+- implemente primeiro persistência local síncrona e só depois pense em melhorias como filtros ou prioridades;
+- documente exemplos de uso no `README` do projeto para facilitar revisões futuras.
 
 ---
 
@@ -147,8 +157,18 @@ Crie uma **biblioteca reutilizável** que importe dados de arquivos CSV e JSON p
 - testes unitários;
 - tratamento de erro idiomático.
 
-#### Critério de conclusão
-Outro projeto do repositório consegue usar essa biblioteca com baixo acoplamento e boa legibilidade.
+#### Critérios de aceite
+- a biblioteca expõe uma API pequena e clara para importar CSV e JSON;
+- erros de validação informam linha, campo ou motivo da falha quando possível;
+- formatos suportados compartilham comportamento comum sem duplicação excessiva;
+- os testes cobrem entradas válidas, inválidas e casos de borda;
+- pelo menos um projeto consumidor consegue reutilizar a biblioteca sem adaptações complexas.
+
+#### Sugestões de desenvolvimento
+- defina primeiro um tipo de domínio simples para servir de contrato de importação;
+- crie uma camada de validação separada da leitura do arquivo;
+- prefira interfaces só para dependências externas, como `io.Reader`;
+- escreva testes table-driven desde cedo para facilitar a expansão de formatos e regras.
 
 ---
 
@@ -189,8 +209,18 @@ Implemente um **módulo de cálculo de descontos** para pedidos.
 - benchmark de regras;
 - refatoração segura.
 
-#### Critério de conclusão
-Cobertura razoável, testes claros, benchmark demonstrando entendimento de custo computacional.
+#### Critérios de aceite
+- as regras de desconto estão cobertas por testes orientados a tabela com casos positivos e negativos;
+- cupons inválidos, combinações incompatíveis e limites de desconto estão explicitamente testados;
+- o módulo separa cálculo, validação e aplicação de contexto promocional de forma legível;
+- existe pelo menos um benchmark comparando versões ou cenários de maior volume;
+- a API do módulo permite reutilização em outro projeto sem depender de infraestrutura externa.
+
+#### Sugestões de desenvolvimento
+- escreva primeiro os cenários de negócio em formato de tabela antes da implementação;
+- comece com uma função pura de cálculo e só depois introduza estruturas auxiliares;
+- use nomes de testes que descrevam a regra de negócio, não apenas a função exercitada;
+- ao benchmarkar, compare cenários realistas como grandes lotes de pedidos ou múltiplos cupons.
 
 ---
 
@@ -243,8 +273,18 @@ Construa uma **API REST de catálogo de produtos**.
 - contexto e timeouts;
 - separação entre transporte, domínio e persistência.
 
-#### Critério de conclusão
-API com rotas limpas, tratamento consistente de erro, testes de integração básicos e uso correto de contexto.
+#### Critérios de aceite
+- a API expõe CRUD funcional com contratos JSON consistentes e códigos HTTP corretos;
+- paginação e filtros básicos funcionam com parâmetros claros e validados;
+- erros de validação e falhas internas retornam respostas padronizadas;
+- timeouts e cancelamentos via `context.Context` são propagados até a camada de persistência;
+- existem testes cobrindo handlers principais e ao menos um fluxo de integração completo.
+
+#### Sugestões de desenvolvimento
+- comece com armazenamento em memória para validar contratos HTTP antes de adicionar banco;
+- defina DTOs explícitos para request e response, evitando acoplar structs internas ao transporte;
+- adicione middlewares de logging e recuperação antes de crescer o número de endpoints;
+- documente exemplos de request/response para facilitar consumo e revisão da API.
 
 ---
 
@@ -289,8 +329,18 @@ Construa um **backend de pedidos** com PostgreSQL.
 - organização de camadas;
 - testes de integração com banco.
 
-#### Critério de conclusão
-Você consegue modelar transações, lidar com erros de persistência e manter o domínio compreensível.
+#### Critérios de aceite
+- o fluxo de criação e fechamento de pedidos usa transações de forma consistente;
+- consultas de leitura retornam dados completos sem ambiguidade entre pedido, itens e cliente;
+- falhas de banco são tratadas com mensagens úteis e rollback quando necessário;
+- migrations permitem recriar o ambiente local sem intervenção manual complexa;
+- testes de integração validam ao menos o caminho feliz e um cenário de falha transacional.
+
+#### Sugestões de desenvolvimento
+- modele primeiro o esquema relacional e os casos de uso antes de escrever os repositórios;
+- mantenha SQL explícito em arquivos ou constantes bem nomeadas para facilitar revisão;
+- use dados de teste realistas para validar joins, filtros e consistência de transações;
+- introduza ferramentas como `sqlc` apenas depois de entender claramente o fluxo com `database/sql`.
 
 ---
 
@@ -339,8 +389,18 @@ Crie um **pipeline concorrente** que leia muitos arquivos, processe conteúdo e 
 - tratamento correto de fechamento de canais;
 - race detector.
 
-#### Critério de conclusão
-O sistema ganha desempenho real sem vazamentos de goroutines nem corrupção de estado.
+#### Critérios de aceite
+- o pipeline processa múltiplos arquivos em paralelo com resultado determinístico ou claramente documentado;
+- cancelamento interrompe stages corretamente quando ocorre erro crítico ou timeout;
+- não há vazamento de goroutines ao finalizar processamento ou interromper execução;
+- métricas básicas permitem comparar execução sequencial versus concorrente;
+- `go test -race` passa para os componentes principais do pipeline.
+
+#### Sugestões de desenvolvimento
+- implemente primeiro uma versão sequencial para ter baseline funcional e de performance;
+- depois quebre o fluxo em stages pequenos com contratos claros entre canais;
+- prefira encapsular ownership de fechamento de canais para evitar deadlocks;
+- meça throughput e latência antes e depois de cada mudança de concorrência.
 
 ---
 
@@ -383,8 +443,18 @@ Monte um **serviço de integração** que recebe pedidos e conversa com um prove
 - observabilidade;
 - comportamento de produção.
 
-#### Critério de conclusão
-Seu serviço falha de forma previsível, observável e controlada.
+#### Critérios de aceite
+- o endpoint de pagamento responde de forma idempotente para requisições repetidas com a mesma chave;
+- timeouts e retries seguem política definida e não multiplicam efeitos colaterais indevidos;
+- logs estruturados permitem rastrear uma requisição ponta a ponta;
+- métricas básicas expõem volume, sucesso, falha e latência das integrações externas;
+- o serviço realiza shutdown gracioso sem perder requisições em andamento de forma abrupta.
+
+#### Sugestões de desenvolvimento
+- comece simulando o provedor externo com um stub HTTP controlável;
+- modele explicitamente estados do pagamento, como `pending`, `approved` e `failed`;
+- implemente idempotência antes de adicionar retry para evitar duplicidade de efeitos;
+- teste cenários de timeout, resposta lenta e erro intermitente como parte da definição de pronto.
 
 ---
 
@@ -419,6 +489,19 @@ Escolha um projeto mais ambicioso, por exemplo:
 - qualidade de testes;
 - clareza arquitetural;
 - prontidão para produção.
+
+#### Critérios de aceite
+- o sistema entrega um fluxo fim a fim funcional, da ingestão até a consulta dos resultados;
+- a arquitetura está documentada com responsabilidades claras entre entrada, processamento e persistência;
+- há cobertura de testes para regras centrais e testes de integração para o fluxo principal;
+- o projeto possui configuração reproduzível localmente, preferencialmente com Docker ou scripts simples;
+- logs, métricas e tratamento de falhas demonstram preocupação real com operação em produção.
+
+#### Sugestões de desenvolvimento
+- escreva uma especificação curta do domínio e dos casos de uso antes de escolher bibliotecas;
+- priorize uma primeira entrega vertical simples, mesmo sem todos os componentes distribuídos;
+- mantenha observabilidade desde o início, ao menos com logs estruturados e health checks;
+- encerre o projeto com uma retrospectiva técnica: o que mudaria, onde escalaria e quais trade-offs aceitou.
 
 ---
 
